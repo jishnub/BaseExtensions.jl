@@ -1,6 +1,6 @@
 name = "BaseExtensions"
 uuid = "10861165-1ac8-4f9f-8a8a-7c6e060a69e2"
-authors = ["jishnub <jishnuonline@gmail.com> and contributors"]
+authors = ["jishnub <jishnub@users.noreply.github.com> and contributors"]
 version = "0.1.0"
 
 [compat]
