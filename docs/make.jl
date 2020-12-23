@@ -20,4 +20,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/jishnub/BaseExtensions.jl",
+    devbranch = "main",
 )
