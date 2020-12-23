@@ -1,0 +1,6 @@
+[deps]
+BaseExtensions = "10861165-1ac8-4f9f-8a8a-7c6e060a69e2"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+
+[compat]
+Documenter = "0.26"

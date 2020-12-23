@@ -44,3 +44,16 @@ end
 	    @test reinterpretcomplex(a) == Complex{T}[1 + im, 2 + 2im]
 	end
 end
+
+@testset "squeeze" begin
+    A = rand(2,1,2)
+    B = squeeze(A)
+    @test B == reshape(A, 2, 2)
+end
+
+@testset "flipdims" begin
+    A = rand(1,2,3)
+    B = flipdims(A)
+    @test B == permutedims(A, [3,2,1])
+    @test axes(B) == reverse(axes(A))
+end

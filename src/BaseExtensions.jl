@@ -1,6 +1,13 @@
 module BaseExtensions
 
-export anynonzero, allzero, zero!, realtype, reinterpretreal, reinterpretcomplex
+export anynonzero
+export allzero
+export zero!
+export realtype
+export reinterpretreal
+export reinterpretcomplex
+export squeeze
+export flipdims
 
 """
 	anynonzero(a)
@@ -130,6 +137,76 @@ See also: [`reinterpretreal`](@ref)
 """
 function reinterpretcomplex(arr::AbstractArray{<:Real})
 	reinterpret(Complex{eltype(arr)}, arr)
+end
+
+"""
+	squeeze(A)
+
+Remove dimensions from `A` that have `size(A, dim) == 1`. 
+Returns a view that shares the underlying data with `A`.
+
+# Examples
+```jldoctest
+julia> A = reshape(collect(1:4), 1, 4)
+1×4 Array{Int64,2}:
+ 1  2  3  4
+
+julia> B = squeeze(A)
+4-element Array{Int64,1}:
+ 1
+ 2
+ 3
+ 4
+```
+"""
+function squeeze(A)
+	dims = Tuple(findall(==(1), size(A)))
+	dropdims(A, dims = dims)
+end
+
+"""
+	flipdims(A)
+
+Permute `A` so that the sequence of axes is reversed. For 2D arrays this is an eager transpose.
+The operation is not recursive.
+
+# Examples
+```jldoctest
+julia> A = reshape(collect(1:8), 2, 4)
+2×4 Array{Int64,2}:
+ 1  3  5  7
+ 2  4  6  8
+
+julia> B = flipdims(A)
+4×2 Array{Int64,2}:
+ 1  2
+ 3  4
+ 5  6
+ 7  8
+
+julia> A = reshape(collect(1:8), 2, 2, 2)
+2×2×2 Array{Int64,3}:
+[:, :, 1] =
+ 1  3
+ 2  4
+
+[:, :, 2] =
+ 5  7
+ 6  8
+
+julia> flipdims(A)
+2×2×2 Array{Int64,3}:
+[:, :, 1] =
+ 1  3
+ 5  7
+
+[:, :, 2] =
+ 2  4
+ 6  8
+```
+"""
+function flipdims(A)
+	permutedims(A, reverse(collect(1:ndims(A))))
 end
 
 end
