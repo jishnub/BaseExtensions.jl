@@ -73,7 +73,7 @@ zero!(a::AbstractArray) = fill!(a, zero(eltype(a)))
 	realtype(::Complex)
 	realtype(::Type{<:Complex})
 
-Return the `eltype` of the real and imaginary parts of a `Complex` number.
+Return the type of the real and imaginary parts of a `Complex` number.
 
 # Examples
 
