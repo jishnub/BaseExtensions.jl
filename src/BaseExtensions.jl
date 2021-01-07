@@ -66,7 +66,7 @@ julia> a = [1, 2];
 julia> zero!(a);
 
 julia> a
-2-element Array{Int64,1}:
+2-element $(Array{Int,1}):
  0
  0
 ```
@@ -103,12 +103,12 @@ Reinterpret a `Complex` array as a `Real` one containing the real and imaginary 
 # Examples
 ```jldoctest
 julia> a = [1 + 3im, 2+ 4im]
-2-element Array{Complex{Int64},1}:
+2-element $(Array{Complex{Int},1}):
  1 + 3im
  2 + 4im
 
 julia> reinterpretreal(a)
-4-element reinterpret(Int64, ::Array{Complex{Int64},1}):
+4-element reinterpret($Int, ::$(Array{Complex{Int},1})):
  1
  3
  2
@@ -132,7 +132,7 @@ are laid out consecutively.
 julia> a = [1, 2, 3, 4];
 
 julia> reinterpretcomplex(a)
-2-element reinterpret(Complex{Int64}, ::Array{Int64,1}):
+2-element reinterpret(Complex{$Int}, ::$(Array{Int,1})):
  1 + 2im
  3 + 4im
 ```
@@ -152,11 +152,11 @@ Returns a view that shares the underlying data with `A`.
 # Examples
 ```jldoctest
 julia> A = reshape(collect(1:4), 1, 4)
-1×4 Array{Int64,2}:
+1×4 $(Array{Int,2}):
  1  2  3  4
 
 julia> B = squeeze(A)
-4-element Array{Int64,1}:
+4-element $(Array{Int,1}):
  1
  2
  3
@@ -177,19 +177,19 @@ The operation is not recursive.
 # Examples
 ```jldoctest
 julia> A = reshape(collect(1:8), 2, 4)
-2×4 Array{Int64,2}:
+2×4 $(Array{Int,2}):
  1  3  5  7
  2  4  6  8
 
 julia> B = flipdims(A)
-4×2 Array{Int64,2}:
+4×2 $(Array{Int,2}):
  1  2
  3  4
  5  6
  7  8
 
 julia> A = reshape(collect(1:8), 2, 2, 2)
-2×2×2 Array{Int64,3}:
+2×2×2 $(Array{Int,3}):
 [:, :, 1] =
  1  3
  2  4
@@ -199,7 +199,7 @@ julia> A = reshape(collect(1:8), 2, 2, 2)
  6  8
 
 julia> flipdims(A)
-2×2×2 Array{Int64,3}:
+2×2×2 $(Array{Int,3}):
 [:, :, 1] =
  1  3
  5  7
@@ -224,7 +224,7 @@ Unlike `fill`, returns an array where each element is unique.
 # Examples
 ```jldoctest
 julia> A = fillcopy(ones(2), 2, 2)
-2×2 Array{Array{Float64,1},2}:
+2×2 $(Array{Array{Float64,1},2}):
  [1.0, 1.0]  [1.0, 1.0]
  [1.0, 1.0]  [1.0, 1.0]
 
@@ -234,12 +234,12 @@ false
 julia> A[1,1] .= 2;
 
 julia> A
-2×2 Array{Array{Float64,1},2}:
+2×2 $(Array{Array{Float64,1},2}):
  [2.0, 2.0]  [1.0, 1.0]
  [1.0, 1.0]  [1.0, 1.0]
 
 julia> B = fillcopy(A, 2)
-2-element Array{Array{Array{Float64,1},2},1}:
+2-element $(Array{Array{Array{Float64,1},2},1}):
  [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
  [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
 
@@ -268,7 +268,7 @@ Fill `A` with shallow copies of `x`. As in `copy`, only the outer container of `
 julia> A = Vector{Vector{Vector{Int}}}(undef, 3);
 
 julia> fillcopy!(A, [[1,2], [1, 2,3]])
-3-element Array{Array{Array{Int64,1},1},1}:
+3-element $(Array{Array{Array{Int,1},1},1}):
  [[1, 2], [1, 2, 3]]
  [[1, 2], [1, 2, 3]]
  [[1, 2], [1, 2, 3]]
@@ -279,7 +279,7 @@ true
 julia> A[1][1] .= 4:5;
 
 julia> A
-3-element Array{Array{Array{Int64,1},1},1}:
+3-element $(Array{Array{Array{Int,1},1},1}):
  [[4, 5], [1, 2, 3]]
  [[4, 5], [1, 2, 3]]
  [[4, 5], [1, 2, 3]]
@@ -304,7 +304,7 @@ in the returned array will be completely unique in identity, albeit equal to `x`
 # Examples
 ```jldoctest
 julia> A = filldeepcopy(ones(2), 2, 2)
-2×2 Array{Array{Float64,1},2}:
+2×2 $(Array{Array{Float64,1},2}):
  [1.0, 1.0]  [1.0, 1.0]
  [1.0, 1.0]  [1.0, 1.0]
 
@@ -314,12 +314,12 @@ false
 julia> A[1,1] .= 2;
 
 julia> A
-2×2 Array{Array{Float64,1},2}:
+2×2 $(Array{Array{Float64,1},2}):
  [2.0, 2.0]  [1.0, 1.0]
  [1.0, 1.0]  [1.0, 1.0]
 
 julia> B = filldeepcopy(A, 2)
-2-element Array{Array{Array{Float64,1},2},1}:
+2-element $(Array{Array{Array{Float64,1},2},1}):
  [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
  [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
 
@@ -349,7 +349,7 @@ completely unique in identity, albeit equal to `x` in value.
 julia> A = Vector{Vector{Vector{Int}}}(undef, 3);
 
 julia> filldeepcopy!(A, [[1,2], [1, 2,3]])
-3-element Array{Array{Array{Int64,1},1},1}:
+3-element $(Array{Array{Array{Int,1},1},1}):
  [[1, 2], [1, 2, 3]]
  [[1, 2], [1, 2, 3]]
  [[1, 2], [1, 2, 3]]
@@ -360,7 +360,7 @@ false
 julia> A[1][1] .= 4:5;
 
 julia> A
-3-element Array{Array{Array{Int64,1},1},1}:
+3-element $(Array{Array{Array{Int,1},1},1}):
  [[4, 5], [1, 2, 3]]
  [[1, 2], [1, 2, 3]]
  [[1, 2], [1, 2, 3]]
