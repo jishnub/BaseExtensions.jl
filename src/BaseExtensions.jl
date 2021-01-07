@@ -8,6 +8,10 @@ export reinterpretreal
 export reinterpretcomplex
 export squeeze
 export flipdims
+export fillcopy
+export fillcopy!
+export filldeepcopy
+export filldeepcopy!
 
 """
 	anynonzero(a)
@@ -207,6 +211,168 @@ julia> flipdims(A)
 """
 function flipdims(A)
 	permutedims(A, reverse(collect(1:ndims(A))))
+end
+
+"""
+	fillcopy(x, dims...)
+
+Create an array filled with shallow copies of `x`, where the dimensions or indices of the array is 
+specfied through the keyword `dims`. As in `copy`, only the outer container of `x` is copied.
+
+Unlike `fill`, returns an array where each element is unique. 
+
+# Examples
+```jldoctest
+julia> A = fillcopy(ones(2), 2, 2)
+2×2 Array{Array{Float64,1},2}:
+ [1.0, 1.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia> A[1,1] === A[2,2]
+false
+
+julia> A[1,1] .= 2;
+
+julia> A
+2×2 Array{Array{Float64,1},2}:
+ [2.0, 2.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia> B = fillcopy(A, 2)
+2-element Array{Array{Array{Float64,1},2},1}:
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+
+julia> B[2] === B[1]
+false
+
+julia> B[2][1] === B[1][1]
+true
+```
+
+See also: [`filldeepcopy`](@ref)
+"""
+function fillcopy(x, inds...)
+	A = similar(Array{typeof(x)}, inds)
+	fillcopy!(A, x)
+	return A
+end
+
+"""
+	fillcopy!(A, x)
+
+Fill `A` with shallow copies of `x`. As in `copy`, only the outer container of `x` is copied.
+
+# Examples
+```jldoctest
+julia> A = Vector{Vector{Vector{Int}}}(undef, 3);
+
+julia> fillcopy!(A, [[1,2], [1, 2,3]])
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+
+julia> A[1][1] === A[2][1]
+true
+
+julia> A[1][1] .= 4:5;
+
+julia> A
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[4, 5], [1, 2, 3]]
+ [[4, 5], [1, 2, 3]]
+ [[4, 5], [1, 2, 3]]
+```
+
+See also: [`filldeepcopy!`](@ref)
+"""
+function fillcopy!(A, x)
+	@inbounds for i in eachindex(A)
+		A[i] = copy(x)
+	end
+	return A
+end
+
+"""
+	filldeepcopy(x, dims...)
+
+Create an array filled with deep copies of `x`, where the dimensions or indices of the array is 
+specfied through the keyword `dims`. As in `deepcopy`, the copy operation is recursive, and each element 
+in the returned array will be completely unique in identity, albeit equal to `x` in value.
+
+# Examples
+```jldoctest
+julia> A = filldeepcopy(ones(2), 2, 2)
+2×2 Array{Array{Float64,1},2}:
+ [1.0, 1.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia> A[1,1] === A[2,2]
+false
+
+julia> A[1,1] .= 2;
+
+julia> A
+2×2 Array{Array{Float64,1},2}:
+ [2.0, 2.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia> B = filldeepcopy(A, 2)
+2-element Array{Array{Array{Float64,1},2},1}:
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+
+julia> B[2] === B[1]
+false
+
+julia> B[2][1] === B[1][1]
+false
+```
+
+See also: [`fillcopy`](@ref)
+"""
+function filldeepcopy(x, inds...)
+	A = similar(Array{typeof(x)}, inds)
+	filldeepcopy!(A, x)
+	return A
+end
+
+"""
+	filldeepcopy!(A, x)
+
+Fill `A` with deep copies of `x`. The operation is recursive and each element in `A` will be 
+completely unique in identity, albeit equal to `x` in value.
+
+# Examples
+```jldoctest
+julia> A = Vector{Vector{Vector{Int}}}(undef, 3);
+
+julia> filldeepcopy!(A, [[1,2], [1, 2,3]])
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+
+julia> A[1][1] === A[2][1]
+false
+
+julia> A[1][1] .= 4:5;
+
+julia> A
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[4, 5], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+```
+
+See also: [`fillcopy!`](@ref)
+"""
+function filldeepcopy!(A, x)
+	@inbounds for i in eachindex(A)
+		A[i] = deepcopy(x)
+	end
+	return A
 end
 
 end

@@ -1,5 +1,17 @@
 using BaseExtensions
 using Test
+using Documenter
+using Aqua
+
+@testset "project quality" begin
+    Aqua.test_all(BaseExtensions)
+end
+
+DocMeta.setdocmeta!(BaseExtensions, :DocTestSetup, :(using BaseExtensions); recursive=true)
+
+@testset "docstrings" begin
+    doctest(BaseExtensions)
+end
 
 @testset "anynonzero + allzero" begin
     a = [1,2,3];
@@ -56,4 +68,34 @@ end
     B = flipdims(A)
     @test B == permutedims(A, [3,2,1])
     @test axes(B) == reverse(axes(A))
+end
+
+@testset "filldeepcopy" begin
+    A = Vector{Vector{Vector{Int}}}(undef, 3);
+    filldeepcopy!(A, [ones(Int, 2) for i = 1:2]);
+
+    A[1][1] .= 3:4;
+
+    for i in 1:3, j = 1:2
+        if i == j == 1
+            @test all(A[i][j] .== 3:4)
+        else
+            @test all(A[i][j] .== 1)
+        end
+    end
+end
+
+@testset "fillcopy" begin
+    A = Vector{Vector{Vector{Int}}}(undef, 3);
+    fillcopy!(A, [ones(Int, 2) for i = 1:2]);
+
+    A[1][1] .= 3:4
+
+    for i in 1:3, j = 1:2
+        if j == 1
+            @test all(A[i][j] .== 3:4)
+        else
+            @test all(A[i][j] .== 1)
+        end
+    end
 end
