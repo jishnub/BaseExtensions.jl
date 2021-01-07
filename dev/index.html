@@ -7,7 +7,7 @@ false
 julia&gt; a = zeros(2);
 
 julia&gt; allzero(a)
-true</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL32-L49">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.anynonzero-Tuple{Any}" href="#BaseExtensions.anynonzero-Tuple{Any}"><code>BaseExtensions.anynonzero</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">anynonzero(a)</code></pre><p>Check if <code>a</code> contains any non-zero element.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1, 2, 0];
+true</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL36-L53">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.anynonzero-Tuple{Any}" href="#BaseExtensions.anynonzero-Tuple{Any}"><code>BaseExtensions.anynonzero</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">anynonzero(a)</code></pre><p>Check if <code>a</code> contains any non-zero element.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1, 2, 0];
 
 julia&gt; anynonzero(a)
 true
@@ -15,7 +15,89 @@ true
 julia&gt; a = zeros(2);
 
 julia&gt; anynonzero(a)
-false</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL12-L29">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.flipdims-Tuple{Any}" href="#BaseExtensions.flipdims-Tuple{Any}"><code>BaseExtensions.flipdims</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">flipdims(A)</code></pre><p>Permute <code>A</code> so that the sequence of axes is reversed. For 2D arrays this is an eager transpose. The operation is not recursive.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = reshape(collect(1:8), 2, 4)
+false</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL16-L33">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.fillcopy!-Tuple{Any,Any}" href="#BaseExtensions.fillcopy!-Tuple{Any,Any}"><code>BaseExtensions.fillcopy!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">fillcopy!(A, x)</code></pre><p>Fill <code>A</code> with shallow copies of <code>x</code>. As in <code>copy</code>, only the outer container of <code>x</code> is copied.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = Vector{Vector{Vector{Int}}}(undef, 3);
+
+julia&gt; fillcopy!(A, [[1,2], [1, 2,3]])
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+
+julia&gt; A[1][1] === A[2][1]
+true
+
+julia&gt; A[1][1] .= 4:5;
+
+julia&gt; A
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[4, 5], [1, 2, 3]]
+ [[4, 5], [1, 2, 3]]
+ [[4, 5], [1, 2, 3]]</code></pre><p>See also: <a href="#BaseExtensions.filldeepcopy!-Tuple{Any,Any}"><code>filldeepcopy!</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL261-L289">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.fillcopy-Tuple{Any,Vararg{Any,N} where N}" href="#BaseExtensions.fillcopy-Tuple{Any,Vararg{Any,N} where N}"><code>BaseExtensions.fillcopy</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">fillcopy(x, dims...)</code></pre><p>Create an array filled with shallow copies of <code>x</code>, where the dimensions or indices of the array is  specfied through the keyword <code>dims</code>. As in <code>copy</code>, only the outer container of <code>x</code> is copied.</p><p>Unlike <code>fill</code>, returns an array where each element is unique. </p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = fillcopy(ones(2), 2, 2)
+2×2 Array{Array{Float64,1},2}:
+ [1.0, 1.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia&gt; A[1,1] === A[2,2]
+false
+
+julia&gt; A[1,1] .= 2;
+
+julia&gt; A
+2×2 Array{Array{Float64,1},2}:
+ [2.0, 2.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia&gt; B = fillcopy(A, 2)
+2-element Array{Array{Array{Float64,1},2},1}:
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+
+julia&gt; B[2] === B[1]
+false
+
+julia&gt; B[2][1] === B[1][1]
+true</code></pre><p>See also: <a href="#BaseExtensions.filldeepcopy-Tuple{Any,Vararg{Any,N} where N}"><code>filldeepcopy</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL216-L254">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.filldeepcopy!-Tuple{Any,Any}" href="#BaseExtensions.filldeepcopy!-Tuple{Any,Any}"><code>BaseExtensions.filldeepcopy!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">filldeepcopy!(A, x)</code></pre><p>Fill <code>A</code> with deep copies of <code>x</code>. The operation is recursive and each element in <code>A</code> will be  completely unique in identity, albeit equal to <code>x</code> in value.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = Vector{Vector{Vector{Int}}}(undef, 3);
+
+julia&gt; filldeepcopy!(A, [[1,2], [1, 2,3]])
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+
+julia&gt; A[1][1] === A[2][1]
+false
+
+julia&gt; A[1][1] .= 4:5;
+
+julia&gt; A
+3-element Array{Array{Array{Int64,1},1},1}:
+ [[4, 5], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]
+ [[1, 2], [1, 2, 3]]</code></pre><p>See also: <a href="#BaseExtensions.fillcopy!-Tuple{Any,Any}"><code>fillcopy!</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL341-L370">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.filldeepcopy-Tuple{Any,Vararg{Any,N} where N}" href="#BaseExtensions.filldeepcopy-Tuple{Any,Vararg{Any,N} where N}"><code>BaseExtensions.filldeepcopy</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">filldeepcopy(x, dims...)</code></pre><p>Create an array filled with deep copies of <code>x</code>, where the dimensions or indices of the array is  specfied through the keyword <code>dims</code>. As in <code>deepcopy</code>, the copy operation is recursive, and each element  in the returned array will be completely unique in identity, albeit equal to <code>x</code> in value.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = filldeepcopy(ones(2), 2, 2)
+2×2 Array{Array{Float64,1},2}:
+ [1.0, 1.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia&gt; A[1,1] === A[2,2]
+false
+
+julia&gt; A[1,1] .= 2;
+
+julia&gt; A
+2×2 Array{Array{Float64,1},2}:
+ [2.0, 2.0]  [1.0, 1.0]
+ [1.0, 1.0]  [1.0, 1.0]
+
+julia&gt; B = filldeepcopy(A, 2)
+2-element Array{Array{Array{Float64,1},2},1}:
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+ [[2.0, 2.0] [1.0, 1.0]; [1.0, 1.0] [1.0, 1.0]]
+
+julia&gt; B[2] === B[1]
+false
+
+julia&gt; B[2][1] === B[1][1]
+false</code></pre><p>See also: <a href="#BaseExtensions.fillcopy-Tuple{Any,Vararg{Any,N} where N}"><code>fillcopy</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL297-L334">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.flipdims-Tuple{Any}" href="#BaseExtensions.flipdims-Tuple{Any}"><code>BaseExtensions.flipdims</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">flipdims(A)</code></pre><p>Permute <code>A</code> so that the sequence of axes is reversed. For 2D arrays this is an eager transpose. The operation is not recursive.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = reshape(collect(1:8), 2, 4)
 2×4 Array{Int64,2}:
  1  3  5  7
  2  4  6  8
@@ -45,7 +127,7 @@ julia&gt; flipdims(A)
 
 [:, :, 2] =
  2  4
- 6  8</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL167-L207">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.realtype-Union{Tuple{Type{Complex{T}}}, Tuple{T}} where T" href="#BaseExtensions.realtype-Union{Tuple{Type{Complex{T}}}, Tuple{T}} where T"><code>BaseExtensions.realtype</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">realtype(::Complex)
+ 6  8</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL171-L211">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.realtype-Union{Tuple{Type{Complex{T}}}, Tuple{T}} where T" href="#BaseExtensions.realtype-Union{Tuple{Type{Complex{T}}}, Tuple{T}} where T"><code>BaseExtensions.realtype</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">realtype(::Complex)
 realtype(::Type{&lt;:Complex})</code></pre><p>Return the type of the real and imaginary parts of a <code>Complex</code> number.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; realtype(ComplexF64(2,2))
 Float64
 
@@ -53,12 +135,12 @@ julia&gt; realtype(ComplexF32(2,2))
 Float32
 
 julia&gt; realtype(ComplexF32)
-Float32</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL72-L90">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.reinterpretcomplex-Tuple{AbstractArray{var&quot;#s12&quot;,N} where N where var&quot;#s12&quot;&lt;:Real}" href="#BaseExtensions.reinterpretcomplex-Tuple{AbstractArray{var&quot;#s12&quot;,N} where N where var&quot;#s12&quot;&lt;:Real}"><code>BaseExtensions.reinterpretcomplex</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">reinterpretcomplex(arr::AbstractArray{&lt;:Real})</code></pre><p>Reinterpret a <code>Real</code> array as a <code>Complex</code> one assuming that the real and imaginary parts are laid out consecutively.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1, 2, 3, 4];
+Float32</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL76-L94">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.reinterpretcomplex-Tuple{AbstractArray{var&quot;#s12&quot;,N} where N where var&quot;#s12&quot;&lt;:Real}" href="#BaseExtensions.reinterpretcomplex-Tuple{AbstractArray{var&quot;#s12&quot;,N} where N where var&quot;#s12&quot;&lt;:Real}"><code>BaseExtensions.reinterpretcomplex</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">reinterpretcomplex(arr::AbstractArray{&lt;:Real})</code></pre><p>Reinterpret a <code>Real</code> array as a <code>Complex</code> one assuming that the real and imaginary parts are laid out consecutively.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1, 2, 3, 4];
 
 julia&gt; reinterpretcomplex(a)
 2-element reinterpret(Complex{Int64}, ::Array{Int64,1}):
  1 + 2im
- 3 + 4im</code></pre><p>See also: <a href="#BaseExtensions.reinterpretreal-Tuple{AbstractArray{var&quot;#s13&quot;,N} where N where var&quot;#s13&quot;&lt;:Complex}"><code>reinterpretreal</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL120-L137">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.reinterpretreal-Tuple{AbstractArray{var&quot;#s13&quot;,N} where N where var&quot;#s13&quot;&lt;:Complex}" href="#BaseExtensions.reinterpretreal-Tuple{AbstractArray{var&quot;#s13&quot;,N} where N where var&quot;#s13&quot;&lt;:Complex}"><code>BaseExtensions.reinterpretreal</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">reinterpretreal(arr::AbstractArray{&lt;:Complex})</code></pre><p>Reinterpret a <code>Complex</code> array as a <code>Real</code> one containing the real and imaginary parts.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1 + 3im, 2+ 4im]
+ 3 + 4im</code></pre><p>See also: <a href="#BaseExtensions.reinterpretreal-Tuple{AbstractArray{var&quot;#s13&quot;,N} where N where var&quot;#s13&quot;&lt;:Complex}"><code>reinterpretreal</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL124-L141">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.reinterpretreal-Tuple{AbstractArray{var&quot;#s13&quot;,N} where N where var&quot;#s13&quot;&lt;:Complex}" href="#BaseExtensions.reinterpretreal-Tuple{AbstractArray{var&quot;#s13&quot;,N} where N where var&quot;#s13&quot;&lt;:Complex}"><code>BaseExtensions.reinterpretreal</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">reinterpretreal(arr::AbstractArray{&lt;:Complex})</code></pre><p>Reinterpret a <code>Complex</code> array as a <code>Real</code> one containing the real and imaginary parts.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1 + 3im, 2+ 4im]
 2-element Array{Complex{Int64},1}:
  1 + 3im
  2 + 4im
@@ -68,7 +150,7 @@ julia&gt; reinterpretreal(a)
  1
  3
  2
- 4</code></pre><p>See also: <a href="#BaseExtensions.reinterpretcomplex-Tuple{AbstractArray{var&quot;#s12&quot;,N} where N where var&quot;#s12&quot;&lt;:Real}"><code>reinterpretcomplex</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL94-L115">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.squeeze-Tuple{Any}" href="#BaseExtensions.squeeze-Tuple{Any}"><code>BaseExtensions.squeeze</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">squeeze(A)</code></pre><p>Remove dimensions from <code>A</code> that have <code>size(A, dim) == 1</code>.  Returns a view that shares the underlying data with <code>A</code>.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = reshape(collect(1:4), 1, 4)
+ 4</code></pre><p>See also: <a href="#BaseExtensions.reinterpretcomplex-Tuple{AbstractArray{var&quot;#s12&quot;,N} where N where var&quot;#s12&quot;&lt;:Real}"><code>reinterpretcomplex</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL98-L119">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.squeeze-Tuple{Any}" href="#BaseExtensions.squeeze-Tuple{Any}"><code>BaseExtensions.squeeze</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">squeeze(A)</code></pre><p>Remove dimensions from <code>A</code> that have <code>size(A, dim) == 1</code>.  Returns a view that shares the underlying data with <code>A</code>.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; A = reshape(collect(1:4), 1, 4)
 1×4 Array{Int64,2}:
  1  2  3  4
 
@@ -77,11 +159,11 @@ julia&gt; B = squeeze(A)
  1
  2
  3
- 4</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL142-L161">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.zero!-Tuple{AbstractArray}" href="#BaseExtensions.zero!-Tuple{AbstractArray}"><code>BaseExtensions.zero!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">zero!(a::AbstractArray)</code></pre><p>Set all elements of an <code>AbstractArray</code> to zero.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1, 2];
+ 4</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL146-L165">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BaseExtensions.zero!-Tuple{AbstractArray}" href="#BaseExtensions.zero!-Tuple{AbstractArray}"><code>BaseExtensions.zero!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">zero!(a::AbstractArray)</code></pre><p>Set all elements of an <code>AbstractArray</code> to zero.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; a = [1, 2];
 
 julia&gt; zero!(a);
 
 julia&gt; a
 2-element Array{Int64,1}:
  0
- 0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/874ffcadc3325de4f7c9857873c5a60472088ef6/src/BaseExtensions.jl#LL52-L69">source</a></section></article></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 December 2020 12:54">Wednesday 23 December 2020</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/jishnub/BaseExtensions.jl/blob/ab1d5ba796bca89377eed4c74943e10dd0ec226f/src/BaseExtensions.jl#LL56-L73">source</a></section></article></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 7 January 2021 09:48">Thursday 7 January 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
